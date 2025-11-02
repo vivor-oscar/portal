@@ -55,8 +55,7 @@ if (!empty($class_name)) {
 
 <div class="flex min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
     <main class="flex-1 ml-20 md:ml-48 lg:ml-64 pt-20 p-4 overflow-x-hidden">
-                <h1 class="text-3xl font-bold mb-2 text-gray-800 dark:text-white">Learners in my class</h1>
-                <p class="mb-4 text-sm text-gray-600">Assigned class: <strong><?php echo htmlspecialchars($class_name ?: 'None'); ?></strong></p>
+                <h1 class="text-3xl font-bold mb-6 text-gray-800 dark:text-white">Learner in my class</h1>
 
                 <?php if (!empty($error)): ?>
                     <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">

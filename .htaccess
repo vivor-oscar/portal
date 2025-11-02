@@ -1,29 +1,8 @@
-RewriteEngine On
- # Remove .php extension from URLs
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^([a-zA-Z0-9_-]+)$ $1.php [L]
-# # Prevent directory listing
- Options -Indexes
+#Enable PHP error reporting
+php_flag display_error On
+php_value error_reporting -1
+php_flag log_errors On
 
-# # Deny access to .htaccess itself
-<Files ".htaccess">
-    Require all denied
-</Files>
 
-# # Protect config and sql folders
-# <Directory "config">
-#     Require all denied
-# </Directory>
-# <Directory "sql">
-#     Require all denied
-# </Directory>
-
-# # Prevent access to hidden files (starting with .)
-<FilesMatch "^\.">
-    Require all denied
-</FilesMatch>
-
-# # Disable server signature
-ServerSignature Off
-
+php_value error_log portal
+php-error.log
