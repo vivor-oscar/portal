@@ -3,8 +3,6 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 session_start();
-// Buffer output so header redirects can be sent even if includes produce output (watermark/footer)
-if (!ob_get_level()) ob_start();
 include('includes/database.php');
 include('templates/loader.php');
 // Determine portal version for display on login page (priority: VERSION file -> package.json version -> git short hash -> default)
@@ -29,8 +27,6 @@ if (empty($PORTAL_VERSION) && function_exists('shell_exec') && is_dir(__DIR__ . 
   }
 }
 if (empty($PORTAL_VERSION)) $PORTAL_VERSION = 'v1.0.0-dev';
-
-include('public/include/watermark.php');
 // Function to handle login for any user type (admin, staff, student)
 function loginUser($conn, $username, $password, $role)
 {
@@ -282,13 +278,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </form>
   </div>
   <script>
-  </script>
-  <?php
-  // Flush output buffer (if any) after page finished rendering
-  if (ob_get_level()) {
-    ob_end_flush();
-  }
-  ?>
+    function togglePassword() {
+      const pwd = document.getElementById('password');
       const icon = document.getElementById('toggleIcon');
       if (pwd.type === 'password') {
         pwd.type = 'text';
@@ -301,6 +292,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       }
     }
   </script>
+  <div class="w-full text-center mt-6 z-10 relative">
+    <small class="text-white/80">Version <?php echo htmlspecialchars($PORTAL_VERSION); ?> &nbsp;|&nbsp; &copy; <?php echo date('Y'); ?> Vivor Oscar</small>
+  </div>
 </body>
 
 </html>
