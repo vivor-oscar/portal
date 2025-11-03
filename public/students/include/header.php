@@ -81,3 +81,8 @@
     document.querySelector('aside').classList.toggle('hidden');
   });
 </script>
+<?php
+// include global watermark/footer so they appear on every page that uses this header
+if (file_exists(__DIR__ . '/../../include/watermark.php')) {
+  include __DIR__ . '/../../include/watermark.php';
+}
