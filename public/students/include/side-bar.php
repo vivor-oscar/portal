@@ -89,10 +89,7 @@ if ($result) {
     <!-- Dropdown Menus -->
     <template x-for="[key, icon, label, links] of [
       ['results', 'fa-square-poll-vertical', 'Results', [['view-result.php','View']]],
-      ['test', 'fa-clipboard', 'Test', [['view.php','View']]],
-      ['attendance', 'fa-check', 'Attendance', [['#','My Attendance']]],
-      ['plan', 'fa-running', 'Plan', [['#','Add','openmodalBtn'], ['#','View']]],
-      ['reports', 'fa-ban', 'Reports', [['#','Report Staff']]]
+      ['test', 'fa-clipboard', 'Test', [['view.php','View']]]
     ]" :key="key">
       <div>
         <button @click="toggleDropdown(key)" class="flex items-center justify-between w-full px-3 py-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 text-sm" :title="sidebarCollapsed ? label : ''">

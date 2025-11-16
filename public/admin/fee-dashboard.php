@@ -88,7 +88,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     } else {
                         $_SESSION['message'] = 'Error saving service fee: ' . $stmt->error;
                     }
-                    
                 } else {
                     $_SESSION['message'] = 'Prepare failed: ' . $conn->error;
                 }
@@ -266,7 +265,9 @@ foreach ($fees as $f) {
 }
 
 // normalize into arrays for the view
-$totals_per_class = array_map(function($v){ return $v; }, $totals_per_class);
+$totals_per_class = array_map(function ($v) {
+    return $v;
+}, $totals_per_class);
 $totals_per_student = array_values($totals_per_student);
 
 // Fetch latest 'feeding' score for each student (when class filter is selected) and compute scored amount
@@ -309,11 +310,11 @@ if ($pr) $payments = $pr->fetch_all(MYSQLI_ASSOC);
 // Expose $classes as simple names for the partial
 $classes = $class_names;
 
-include 'include/side-bar.php'; 
+include 'include/side-bar.php';
 ?>
 
-<div class="flex min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-    <main class="flex-1 ml-20 md:ml-48 lg:ml-64 pt-20 p-4 overflow-x-hidden">
+<div class="flex min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 overflow-x-hidden">
+    <main class="flex-1 ml-20 sm:ml-10 md:ml-48 lg:ml-64 pt-20 p-4 overflow-y-auto">
         <div class="container mx-auto px-2 sm:px-4">
             <h1 class="text-2xl sm:text-3xl font-bold text-center mb-6 text-blue-800">Fees Management System</h1>
             <?php if (isset($_SESSION['message'])): ?>
@@ -396,6 +397,7 @@ include 'include/side-bar.php';
             </div>
         </div>
     </main>
+</div>
     <script>
         // Make openTab globally available
         window.openTab = function(tabId, event) {
@@ -560,5 +562,4 @@ include 'include/side-bar.php';
             `;
         }
     </script>
-    </body>
     <?php include 'include/modals.php'; ?>

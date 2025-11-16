@@ -1,5 +1,6 @@
-// Modal functionality
+// Modal functionality and guarded UI wiring
 document.addEventListener("DOMContentLoaded", () => {
+  // Edit modal logic
   const modal = document.getElementById("modal_container");
   const closeModal = document.getElementById("close_modal");
 
@@ -16,37 +17,49 @@ document.addEventListener("DOMContentLoaded", () => {
             if (field) field.value = value;
           });
 
-          modal.classList.add("show");
-        });
+          if (modal) modal.classList.add("show");
+        })
+        .catch((err) => { /* fail silently - page may not have endpoint */ });
     });
   });
 
-  closeModal.addEventListener("click", () => {
-    modal.classList.remove("show");
-  });
-});
-
-document.querySelector(".toggle-sidebar").addEventListener("click", () => {
-  document.querySelector("aside").classList.toggle("hidden");
-});
-
-document.getElementById("openmodalBtn").onclick = function () {
-  document.getElementById("uploadmodal").style.display = "block";
-};
-
-document.querySelector(".close").onclick = function () {
-  document.getElementById("uploadmodal").style.display = "none";
-};
-
-window.onclick = function (event) {
-  if (event.target == document.getElementById("uploadmodal")) {
-    document.getElementById("uploadmodal").style.display = "none";
+  if (closeModal) {
+    closeModal.addEventListener("click", () => {
+      if (modal) modal.classList.remove("show");
+    });
   }
-};
 
+  // Guarded sidebar toggle: attach only if .toggle-sidebar exists
+  const toggleButtons = document.querySelectorAll('.toggle-sidebar');
+  if (toggleButtons && toggleButtons.length) {
+    toggleButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const aside = document.querySelector('aside');
+        if (aside) aside.classList.toggle('hidden');
+      });
+    });
+  }
 
+  // Upload modal wiring (guarded)
+  const openModalBtn = document.getElementById("openmodalBtn");
+  const uploadModal = document.getElementById("uploadmodal");
+  const uploadClose = document.querySelector(".close");
 
-var totalSeconds = 180;
+  if (openModalBtn && uploadModal) {
+    openModalBtn.addEventListener('click', () => { uploadModal.style.display = 'block'; });
+  }
+  if (uploadClose && uploadModal) {
+    uploadClose.addEventListener('click', () => { uploadModal.style.display = 'none'; });
+  }
+  if (uploadModal) {
+    window.addEventListener('click', function (event) {
+      if (event.target === uploadModal) uploadModal.style.display = 'none';
+    });
+  }
+
+});
+//TIMER FOR AUTOLOGOUT AFTER 10 MINUTES OF INACTIVITY
+var totalSeconds = 600;
 
 // Function to update countdown and logout user
 function updateCountdown() {
@@ -61,7 +74,7 @@ function updateCountdown() {
 
   // Update countdown element
   var countdownElement = document.getElementById("countdownDisplay");
-  countdownElement.textContent = hours + ":" + minutes + ":" + seconds;
+  if (countdownElement) countdownElement.textContent = hours + ":" + minutes + ":" + seconds;
 
   // Decrease totalSeconds
   totalSeconds--;
@@ -78,7 +91,7 @@ function updateCountdown() {
 
 // Function to reset the timer when user activity detected
 function resetTimer() {
-  totalSeconds = 180; // Reset the timer back to 5 minutes
+  totalSeconds = 600; // Reset the timer back to 10 minutes
 }
 
 // Start the countdown

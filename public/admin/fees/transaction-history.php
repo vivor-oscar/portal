@@ -47,7 +47,9 @@ if ($students_result && $students_result->num_rows > 0) {
 }
 ?>
 <!-- Transaction History Tab -->
-<div id="transactions" class="tab-content">
+
+<div class="p-4">
+    <div id="transactions" class="tab-content">
     <h2 class="text-lg sm:text-xl md:text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Transaction History</h2>
 
     <div class="mb-4">
@@ -130,5 +132,6 @@ if ($students_result && $students_result->num_rows > 0) {
                 <?php endif; ?>
             </tbody>
         </table>
+    </div>
     </div>
 </div>

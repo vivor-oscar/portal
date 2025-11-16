@@ -1,3 +1,11 @@
+<?php
+// Prevent multiple inclusions of staff modals to avoid duplicate IDs in the DOM
+$__vo_modal_guard = 'PORTAL_MODALS_INCLUDED_' . md5(__FILE__);
+if (defined($__vo_modal_guard)) {
+  return;
+}
+define($__vo_modal_guard, true);
+?>
 
 <!-- ADD TEST MODAL -->
 <div id="testFormModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">

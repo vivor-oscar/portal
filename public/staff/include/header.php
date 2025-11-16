@@ -78,9 +78,15 @@
     setTheme(window.darkMode ? 'dark' : 'light');
   };
 
-  document.querySelector('.toggle-sidebar').addEventListener('click', () => {
-    document.querySelector('aside').classList.toggle('hidden');
-  });
+  (function(){
+    const toggleBtn = document.querySelector('.toggle-sidebar');
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', () => {
+        const aside = document.querySelector('aside');
+        if (aside) aside.classList.toggle('hidden');
+      });
+    }
+  })();
 </script>
 <?php include 'modals.php'; ?>
 <?php

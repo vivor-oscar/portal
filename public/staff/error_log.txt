@@ -1,2 +1,0 @@
-[23-Sep-2025 19:31:49 Europe/Berlin] PHP Warning:  Undefined variable $selected_date in C:\xampp\htdocs\portal\public\staff\attendance.php on line 72
-[23-Sep-2025 19:31:49 Europe/Berlin] PHP Warning:  Undefined variable $selected_date in C:\xampp\htdocs\portal\public\staff\attendance.php on line 77

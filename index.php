@@ -4,29 +4,13 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 session_start();
 include('includes/database.php');
-include('templates/loader.php');
-// Determine portal version for display on login page (priority: VERSION file -> package.json version -> git short hash -> default)
+
+
 $PORTAL_VERSION = '';
 $versionFile = __DIR__ . '/VERSION';
-if (file_exists($versionFile)) {
-  $PORTAL_VERSION = trim(@file_get_contents($versionFile));
-} else {
-  $pkg = __DIR__ . '/package.json';
-  if (file_exists($pkg)) {
-    $pkgData = json_decode(@file_get_contents($pkg), true);
-    if (!empty($pkgData['version'])) {
-      $PORTAL_VERSION = $pkgData['version'];
-    }
-  }
-}
-// Try git short hash if still empty and shell_exec available
-if (empty($PORTAL_VERSION) && function_exists('shell_exec') && is_dir(__DIR__ . '/.git')) {
-  $gitHash = trim(@shell_exec('git rev-parse --short HEAD'));
-  if ($gitHash) {
-    $PORTAL_VERSION = 'dev-' . $gitHash;
-  }
-}
-if (empty($PORTAL_VERSION)) $PORTAL_VERSION = 'v1.0.0-dev';
+if (empty($PORTAL_VERSION)) $PORTAL_VERSION = 'v1.0.0.2';
+
+
 // Function to handle login for any user type (admin, staff, student)
 function loginUser($conn, $username, $password, $role)
 {
@@ -54,7 +38,7 @@ function loginUser($conn, $username, $password, $role)
 
   if ($result && mysqli_num_rows($result) > 0) {
     $row = mysqli_fetch_assoc($result);
-      if (password_verify($password, $row['password'])) {
+    if (password_verify($password, $row['password'])) {
       $_SESSION['username'] = $row['username'];
       $_SESSION['role'] = $role;
 
@@ -292,9 +276,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       }
     }
   </script>
-  <div class="w-full text-center mt-6 z-10 relative">
-    <small class="text-white/80">Version <?php echo htmlspecialchars($PORTAL_VERSION); ?> &nbsp;|&nbsp; &copy; <?php echo date('Y'); ?> Vivor Oscar</small>
-  </div>
+  <footer class="absolute bottom-4 w-full text-center z-10">
+    <small class="text-white/80">&nbsp; &copy; <?php echo date('Y'); ?> Vivor Oscar | Version <?php echo htmlspecialchars($PORTAL_VERSION); ?> &nbsp;</small>
+  </footer>
+
 </body>
 
 </html>

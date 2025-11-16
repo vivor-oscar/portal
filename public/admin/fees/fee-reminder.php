@@ -31,7 +31,8 @@ if ($feeStatusResult && $feeStatusResult->num_rows > 0) {
 }
 ?>
 <!-- Due Fee Reminders Tab -->
-<div id="reminders" class="tab-content">
+<div class="p-4">
+    <div id="reminders" class="tab-content">
     <h2 class="text-lg sm:text-xl md:text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Due Fee Reminders</h2>
 
     <div class="mb-4">
@@ -95,5 +96,6 @@ if ($feeStatusResult && $feeStatusResult->num_rows > 0) {
                 <?php endif; ?>
             </tbody>
         </table>
+    </div>
     </div>
 </div>

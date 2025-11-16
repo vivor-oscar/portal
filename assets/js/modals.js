@@ -1,17 +1,17 @@
-
-document.getElementById("openmodalBtn").onclick = function() {
-    document.getElementById("uploadmodal").style.display = "block";
-  };
-
-  document.querySelector(".close").onclick = function() {
-    document.getElementById("uploadmodal").style.display = "none";
-  };
-
-  window.onclick = function(event) {
-    if (event.target == document.getElementById("uploadmodal")) {
-      document.getElementById("uploadmodal").style.display = "none";
-    }
-  };
+const _openBtn = document.getElementById("openmodalBtn");
+const __uploadModal = document.getElementById("uploadmodal");
+const __closeBtn = document.querySelector(".close");
+if (_openBtn && __uploadModal) {
+  _openBtn.addEventListener('click', () => { __uploadModal.style.display = 'block'; });
+}
+if (__closeBtn && __uploadModal) {
+  __closeBtn.addEventListener('click', () => { __uploadModal.style.display = 'none'; });
+}
+if (__uploadModal) {
+  window.addEventListener('click', function(event) {
+    if (event.target === __uploadModal) __uploadModal.style.display = 'none';
+  });
+}
 
 // ADD STAFF MODAL
 function newStaff(){

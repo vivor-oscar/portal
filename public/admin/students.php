@@ -363,7 +363,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['delete_selected'])) {
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <div>
           <h2 class="text-[clamp(1.25rem,2.5vw,1.75rem)] font-bold text-gray-800 dark:text-white">
-            Staff Management
+            Student Management
           </h2>
           <p class="text-[clamp(0.85rem,1.5vw,1rem)] text-gray-500 dark:text-gray-400 mt-1">
             Manage all students

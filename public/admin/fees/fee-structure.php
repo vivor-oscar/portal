@@ -1,4 +1,5 @@
 <!-- Fee Structure Tab -->
+<div class="p-4">
                 <div id="fee-structure" class="tab-content active">
                     <h2 class="text-lg sm:text-xl md:text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Fee Structure Setup</h2>
 
@@ -96,3 +97,4 @@
                         </div>
                     </div>
                 </div>
+</div>

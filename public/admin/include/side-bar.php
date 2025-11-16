@@ -9,7 +9,7 @@ ini_set('error_log', '../../logs/ad_error.log');
 if (!isset($_SESSION['username']) && ($_SESSION['role'] !== 'administrator')) {
   header("Location:../../index.php");
 }
-//include('../../templates/loader.php');
+include('../../templates/loader.php');
 ?>
 <!DOCTYPE html>
 <html lang="en" x-data="{ 
@@ -33,12 +33,9 @@ if (!isset($_SESSION['username']) && ($_SESSION['role'] !== 'administrator')) {
   <link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../../assets/favicon/favicon-16x16.png">
   <link rel="manifest" href="../../assets/favicon/site.webmanifest">
-  <!-- <script src="https://cdn.tailwindcss.com"></script> -->
   <link href="../../dist/output.css" rel="stylesheet">
   <script src="//unpkg.com/alpinejs" defer></script>
-  <!-- Add this to your <head> if Font Awesome is not already included -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
   <!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" /> -->
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 </head>
@@ -102,7 +99,6 @@ if (!isset($_SESSION['username']) && ($_SESSION['role'] !== 'administrator')) {
         <div x-show="dropdowns['staff'] && !sidebarCollapsed" x-transition class="ml-10 mt-1 text-sm space-y-1 text-blue-600">
           <a href="#" onclick="document.getElementById('staffFormModal').classList.remove('hidden')" class="block px-2 py-1 hover:underline">New Staff</a>
           <a href="staff.php" class="block px-2 py-1 hover:underline">All Staff</a>
-          <a href="view-students.php" class="block px-2 py-1 hover:underline">Student-Staff Relations</a>
         </div>
       </div>
 
@@ -118,7 +114,7 @@ if (!isset($_SESSION['username']) && ($_SESSION['role'] !== 'administrator')) {
         <div x-show="dropdowns['student'] && !sidebarCollapsed" x-transition class="ml-10 mt-1 text-sm space-y-1 text-blue-600">
           <a href="#" onclick="document.getElementById('studentFormModal').classList.remove('hidden'); return false;" class="block px-2 py-1 hover:underline">New Student</a>
           <a href="students.php" class="block px-2 py-1 hover:underline">All Students</a>
-          <a href="#" class="block px-2 py-1 hover:underline">Promote Students</a>
+          <a href="approve-promotions.php" class="block px-2 py-1 hover:underline">Approve Promotions</a>
         </div>
       </div>
 

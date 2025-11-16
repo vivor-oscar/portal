@@ -1,3 +1,12 @@
+<?php
+// Prevent multiple inclusions of the same modal HTML (guards against duplicate IDs)
+$__vo_modal_guard = 'PORTAL_MODALS_INCLUDED_' . md5(__FILE__);
+if (defined($__vo_modal_guard)) {
+  return;
+}
+define($__vo_modal_guard, true);
+?>
+
 <!-- Add Admin -->
 <style>
 /* Student modal responsive behavior: expand fields to full width when any input is focused */

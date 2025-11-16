@@ -1,6 +1,0 @@
-[05-Sep-2025 23:48:39 Europe/Berlin] PHP Warning:  Undefined variable $payments in C:\xampp\htdocs\portal\public\admin\fee-dashboard.php on line 314
-[05-Sep-2025 23:48:40 Europe/Berlin] PHP Warning:  include(include/modal.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\portal\public\admin\fee-dashboard.php on line 383
-[05-Sep-2025 23:48:40 Europe/Berlin] PHP Warning:  include(): Failed opening 'include/modal.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\portal\public\admin\fee-dashboard.php on line 383
-[21-Sep-2025 14:01:54 Europe/Berlin] PHP Warning:  Undefined array key "role" in C:\xampp\htdocs\portal\public\admin\include\side-bar.php on line 10
-[21-Sep-2025 14:01:55 Europe/Berlin] PHP Warning:  Undefined array key "role" in C:\xampp\htdocs\portal\public\admin\include\side-bar.php on line 10
-[21-Sep-2025 17:00:47 Europe/Berlin] PHP Warning:  Undefined array key "role" in C:\xampp\htdocs\portal\public\admin\include\side-bar.php on line 10

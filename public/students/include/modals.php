@@ -1,3 +1,12 @@
+<?php
+// Prevent multiple inclusions of student modals to avoid duplicate IDs in the DOM
+$__vo_modal_guard = 'PORTAL_MODALS_INCLUDED_' . md5(__FILE__);
+if (defined($__vo_modal_guard)) {
+  return;
+}
+define($__vo_modal_guard, true);
+?>
+
 <style>
   /* Modal background */
   .modal {

@@ -11,7 +11,7 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['role']) || $_SESSION['rol
   header("Location:../../index.php");
   exit();
 }
-//include('../../templates/loader.php');
+include('../../templates/loader.php');
 include '../../includes/database.php';
 
 // Fetch unread notification count for staff
