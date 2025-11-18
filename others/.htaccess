@@ -1,8 +1,0 @@
-#Enable PHP error reporting
-php_flag display_error On
-php_value error_reporting -1
-php_flag log_errors On
-
-
-php_value error_log portal
-php-error.log
