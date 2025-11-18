@@ -1,2 +1,0 @@
--- SMS migration moved to /maintenance/sql_create_sms_logs.sql
--- To re-enable SMS logging, restore the archived SQL from the maintenance folder.
