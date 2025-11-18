@@ -1,11 +1,7 @@
 # School Management Portal
 
 A modern, responsive web-based school management system built with PHP, Tailwind CSS, and JavaScript. Designed for administrators, staff, and students with comprehensive features for academic management, attendance tracking, fee management, and more.
-
-**Repository**: [https://github.com/vivor-oscar/schoolmanagement](https://github.com/vivor-oscar/schoolmanagement)
-
 ---
-
 ## 📋 Table of Contents
 
 - [Overview](#overview)
@@ -249,23 +245,13 @@ All pages feature modern UI with Tailwind CSS, dark mode support, and responsive
    mysql -u root -p < sql/portal.sql
    ```
 
-3. **Configure Database Connection**
-   - Edit `includes/database.php`
-   - Update database credentials:
-     ```php
-     $servername = "localhost";
-     $username = "root";
-     $password = "";
-     $dbname = "portal";
-     ```
-
-4. **Place in Web Root**
+3. **Place in Web Root**
    ```bash
    # For XAMPP
    cp -r portal C:\xampp\htdocs\
    ```
 
-5. **Access the Portal**
+4. **Access the Portal**
    - Navigate to: `http://localhost/portal/`
    - Use default credentials (set during setup)
 
@@ -295,16 +281,6 @@ All pages feature modern UI with Tailwind CSS, dark mode support, and responsive
 
 ## 🗄 Database
 
-### Schema Highlights
-- **users** - Authentication credentials
-- **students** - Student information
-- **staff** - Staff information
-- **staff_classes** - Staff to class assignments
-- **attendance** - Attendance records
-- **results** - Student results
-- **fees** - Fee management
-- **notifications** - System notifications
-
 **SQL Dump**: `sql/portal.sql`
 
 ---
@@ -319,7 +295,7 @@ All pages feature modern UI with Tailwind CSS, dark mode support, and responsive
 5. Session used for authorization checks
 
 ### Security Features
-- Password hashing (recommended: bcrypt)
+- Password hashing
 - Session validation
 - CSRF token support
 - SQL injection prevention (parameterized queries)
@@ -353,38 +329,12 @@ All pages feature modern UI with Tailwind CSS, dark mode support, and responsive
 
 ---
 
-
-### Commit Message Format
-```
-[Type]: [Description]
-
-Examples:
-- "Fix: PDF now displays student name instead of ID"
-- "Feature: Add in-page PDF preview for results"
-- "Update: Improve responsive design on mobile"
-- "Docs: Update README with new features"
-```
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these guidelines:
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/your-feature`
-3. Make your changes
-4. Commit with clear messages: `git commit -m "Feature: description"`
-5. Push to the branch: `git push origin feature/your-feature`
-6. Submit a pull request
-
----
-
 ## 📧 Contact & Support
 
 **Project Owner**: Vivor Oscar
-**GitHub**: [@vivor-oscar](https://github.com/vivor-oscar)
-**Repository**: [schoolmanagement](https://github.com/vivor-oscar/schoolmanagement)
+**Website**: www.infinititechub.unaux.com
+**WhatsApp**: +233533519466
+**Email**: oscarvivor@gmail.com
 
 For issues, feature requests, or documentation questions, please visit the GitHub repository.
 
