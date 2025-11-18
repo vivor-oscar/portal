@@ -2,6 +2,8 @@
 // Endpoint: promote selected students to next class.
 // If a student is in Basic 9 (or class ending with 9), set class to "Old Student - YEAR".
 include('../includes/database.php');
+include('../includes/notification.php');
+
 
 header('Content-Type: application/json');
 
@@ -27,7 +29,7 @@ foreach ($student_ids as $sid) {
     $sid = trim($sid);
     if ($sid === '') continue;
     $sidEsc = $conn->real_escape_string($sid);
-    $res = $conn->query("SELECT `class` FROM students WHERE student_id='" . $sidEsc . "' LIMIT 1");
+    $res = $conn->query("SELECT `class`, first_name, last_name, parent_email, parent_number FROM students WHERE student_id='" . $sidEsc . "' LIMIT 1");
     if (!$res || $res->num_rows === 0) {
         $errors[] = "Student $sid not found";
         continue;
@@ -74,6 +76,19 @@ foreach ($student_ids as $sid) {
     $sql = "UPDATE students SET promotion_status='pending', promotion_target='" . $escTarget . "' WHERE student_id='" . $sidEsc . "'";
     if ($conn->query($sql)) {
         $created_pending++;
+        // Queue notifications to parent (email and SMS) if available
+        $studentName = trim(($row['first_name'] ?? '') . ' ' . ($row['last_name'] ?? ''));
+        $parentEmail = $row['parent_email'] ?? '';
+        $parentNumber = $row['parent_number'] ?? '';
+        $payload = ['data' => ['student_name' => $studentName, 'student_id' => $sid, 'new_class' => $newClass]];
+        if (!empty($parentEmail)) {
+            // Use a generic template or direct payload
+            $notif->queueNotification('email', $parentEmail, $payload, null, 'email', null, null, null);
+        }
+        if (!empty($parentNumber)) {
+            $smsMessage = "Your child {$studentName} (ID: {$sid}) has been scheduled for promotion to {$newClass}.";
+            $notif->queueSMS($parentNumber, $smsMessage, null, null);
+        }
     } else {
         $errors[] = "Failed to mark pending for $sid: " . $conn->error;
     }

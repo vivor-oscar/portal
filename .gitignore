@@ -1,0 +1,11 @@
+# Ignore environment files
+.env
+.env.example
+# Ignore dependencies
+
+/vendor/
+/node_modules/
+/.idea/
+/.vscode/
+/.DS_Store
+/public/admin/error_log.txt

@@ -11,13 +11,47 @@ if (!isset($_SESSION['username']) && ($_SESSION['role'] !== 'student')) {
 }
 include('../../templates/loader.php');
 include('../../includes/database.php');
-// Fetch unread notification count for staff
+// Fetch unread notification count for this student (per-user recipients, fallback to legacy)
 $notif_count = 0;
-$notif_sql = "SELECT COUNT(*) AS cnt FROM notifications WHERE (target_role = 'all' OR target_role = 'staff') AND (is_read = 0 OR is_read IS NULL)";
-$result = $conn->query($notif_sql);
-if ($result) {
-  $row = $result->fetch_assoc();
-  $notif_count = $row['cnt'];
+$username = $_SESSION['username'] ?? '';
+$student_id = '';
+if (!empty($username)) {
+  $stmt = $conn->prepare("SELECT student_id FROM students WHERE username = ? LIMIT 1");
+  if ($stmt) {
+    $stmt->bind_param('s', $username);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    if ($res && $row = $res->fetch_assoc()) {
+      $student_id = $row['student_id'];
+    }
+    $stmt->close();
+  }
+}
+
+if (!empty($student_id)) {
+  $count_sql = "SELECT COUNT(DISTINCT n.notification_id) AS cnt
+    FROM notifications n
+    LEFT JOIN notification_recipients nr ON nr.notification_id = n.notification_id AND nr.user_type = 'student' AND nr.user_id = ?
+    WHERE (
+      (nr.id IS NOT NULL AND nr.read_at IS NULL)
+      OR (nr.id IS NULL AND (n.target_role IN ('all','student')) AND (n.is_read = 0 OR n.is_read IS NULL))
+    )";
+  $cstmt = $conn->prepare($count_sql);
+  if ($cstmt) {
+    $cstmt->bind_param('s', $student_id);
+    $cstmt->execute();
+    $cres = $cstmt->get_result();
+    if ($cres && $crow = $cres->fetch_assoc()) $notif_count = $crow['cnt'];
+    $cstmt->close();
+  }
+} else {
+  // Fallback: legacy behavior (counts all student-targeted notifications)
+  $notif_sql = "SELECT COUNT(*) AS cnt FROM notifications WHERE (target_role = 'all' OR target_role = 'student') AND (is_read = 0 OR is_read IS NULL)";
+  $result = $conn->query($notif_sql);
+  if ($result) {
+    $row = $result->fetch_assoc();
+    $notif_count = $row['cnt'];
+  }
 }
 ?>
 <!DOCTYPE html>

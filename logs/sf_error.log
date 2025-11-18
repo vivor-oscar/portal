@@ -1,8 +1,0 @@
-[24-Oct-2025 19:02:40 Europe/Berlin] PHP Warning:  Undefined variable $student in C:\xampp\htdocs\portal\public\staff\view-students.php on line 86
-[24-Oct-2025 19:02:40 Europe/Berlin] PHP Warning:  Trying to access array offset on value of type null in C:\xampp\htdocs\portal\public\staff\view-students.php on line 86
-[24-Oct-2025 19:02:40 Europe/Berlin] PHP Warning:  Undefined variable $student in C:\xampp\htdocs\portal\public\staff\view-students.php on line 87
-[24-Oct-2025 19:02:40 Europe/Berlin] PHP Warning:  Trying to access array offset on value of type null in C:\xampp\htdocs\portal\public\staff\view-students.php on line 87
-[24-Oct-2025 19:02:40 Europe/Berlin] PHP Warning:  Undefined variable $student in C:\xampp\htdocs\portal\public\staff\view-students.php on line 88
-[24-Oct-2025 19:02:40 Europe/Berlin] PHP Warning:  Trying to access array offset on value of type null in C:\xampp\htdocs\portal\public\staff\view-students.php on line 88
-[24-Oct-2025 19:02:40 Europe/Berlin] PHP Warning:  Undefined variable $student in C:\xampp\htdocs\portal\public\staff\view-students.php on line 89
-[24-Oct-2025 19:02:40 Europe/Berlin] PHP Warning:  Trying to access array offset on value of type null in C:\xampp\htdocs\portal\public\staff\view-students.php on line 89

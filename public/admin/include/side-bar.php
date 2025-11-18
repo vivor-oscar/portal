@@ -1,13 +1,30 @@
 <?php
-session_start();
-error_reporting(0);
+// Harden session cookies and start session
+$cookieParams = [
+  'httponly' => true,
+  'samesite' => 'Lax',
+  'secure' => (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+];
+session_set_cookie_params($cookieParams);
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+// Regenerate session id to prevent fixation
+if (empty($_SESSION['initiated'])) {
+  session_regenerate_id(true);
+  $_SESSION['initiated'] = 1;
+}
+
+// Error handling: do not display errors to users, log to project logs
 error_reporting(E_ALL);
-ini_set('display_errors', 0);
-ini_set('log_errors', 1);
-ini_set('error_log', '../../logs/ad_error.log');
-@ini_set('display_error', 0);
-if (!isset($_SESSION['username']) && ($_SESSION['role'] !== 'administrator')) {
-  header("Location:../../index.php");
+ini_set('display_errors', '0');
+ini_set('log_errors', '1');
+ini_set('error_log', __DIR__ . '/../../../logs/ad_error.log');
+
+// Require authentication: redirect if username missing or role not administrator
+if (!isset($_SESSION['username']) || !isset($_SESSION['role']) || $_SESSION['role'] !== 'administrator') {
+  header('Location: ../../index.php');
+  exit;
 }
 include('../../templates/loader.php');
 ?>
@@ -28,7 +45,7 @@ include('../../templates/loader.php');
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><?php echo strtoupper(substr(basename($_SERVER['PHP_SELF']), 0, -4)); ?></title>
+  <title><?php echo htmlspecialchars(strtoupper(pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) ?: 'Dashboard'), ENT_QUOTES, 'UTF-8'); ?></title>
   <link rel="apple-touch-icon" sizes="180x180" href="../../assets/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../../assets/favicon/favicon-16x16.png">

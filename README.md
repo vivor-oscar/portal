@@ -1,205 +1,409 @@
-# Portal Project Documentation
+# School Management Portal
 
-## Files and Folder Structure
+A modern, responsive web-based school management system built with PHP, Tailwind CSS, and JavaScript. Designed for administrators, staff, and students with comprehensive features for academic management, attendance tracking, fee management, and more.
+
+**Repository**: [https://github.com/vivor-oscar/schoolmanagement](https://github.com/vivor-oscar/schoolmanagement)
+
+---
+
+## 📋 Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Technology Stack](#technology-stack)
+- [Project Structure](#project-structure)
+- [Key Components](#key-components)
+- [Recent Enhancements](#recent-enhancements)
+- [Installation & Setup](#installation--setup)
+- [Usage](#usage)
+- [Database](#database)
+- [Authentication](#authentication)
+- [UI/UX Highlights](#uiux-highlights)
+- [Contributing](#contributing)
+
+---
+
+## 🎯 Overview
+
+This is a comprehensive school management portal that streamlines administrative tasks, facilitates staff operations, and provides students with easy access to their academic information. The system features modern UI design with dark mode support, responsive layouts, and progressive web app (PWA) capabilities.
+
+**Institution**: Royal Websters Academy
+
+---
+
+## ✨ Features
+
+### Admin Dashboard
+- 👥 Staff and student management
+- 📊 Attendance tracking and reporting
+- 💰 Fee collection and management
+- 📄 Student promotion and results administration
+- 📧 Notification system
+- 🎓 Class and subject management
+- ⚙️ System settings and configuration
+
+### Staff Features
+- ✅ Mark student attendance (class and individual)
+- 📈 Upload and manage student results
+- 🎬 Check-in system with QR codes
+- 👓 View assigned students
+- 📢 Send notifications to students
+- 📋 Terminal report sheet generation with PDF export
+- 📊 View class statistics and performance
+
+### Student Portal
+- 📖 View academic results
+- 🔍 **PDF Result Preview** (in-page viewer)
+- 📥 Download result PDFs
+- 📧 View notifications
+- ⚙️ Profile and account settings
+- 📱 Responsive mobile design
+
+### General Features
+- 🔐 Role-based access control (Admin/Staff/Student)
+- 🌓 Dark mode support across all pages
+- 📱 Fully responsive design (mobile, tablet, desktop)
+- 🔔 Real-time notifications
+- 📊 Automated grade calculation and remarks
+- 🎓 Attendance tracking
+- 💾 LocalStorage data persistence
+- 🚀 Progressive Web App (PWA) support
+
+---
+
+## 🛠 Technology Stack
+
+### Backend
+- **PHP 7.4+** - Server-side logic
+- **MySQL** - Database management
+- **Session Management** - User authentication
+
+### Frontend
+- **Tailwind CSS** - Utility-first CSS framework
+- **Vanilla JavaScript** - Client-side interactivity
+- **Alpine.js** - Lightweight JavaScript framework (optional)
+- **Font Awesome 6.0+** - Icon library
+- **Bootstrap** - Component framework
+
+### PDF & Image Processing
+- **html2canvas** - HTML to Canvas conversion
+- **jsPDF** - PDF generation
+- **PDF.js** - PDF rendering and viewing
+
+### Build Tools
+- **PostCSS** - CSS processing
+- **Tailwind CSS CLI** - Utility generation
+
+---
+
+## 📁 Project Structure
 
 ```
-DOCUMENTATION.md
-index.php
-logout.php
-manifest.json
-package.json
-postcss.config.js
-tailwind.config.js
-app/
-	app.js
-	service-worker.js
-assets/
-	css/
-		all.min.css
-		bootstrap.min.css
-		style.css
-	favicon/
-		android-chrome-192x192.png
-		android-chrome-512x512.png
-		apple-touch-icon.png
-		favicon-16x16.png
-		favicon-32x32.png
-		favicon.ico
-		site.webmanifest
-	fonts/
-		font-awesome.min.css
-	js/
-		bootstrap.bundle.min.js
-		chart.js
-		checkin.js
-		jquery-3.6.0.min.js
-		main.js
-		modals.js
-bookshop/
-	add-book.php
-	login.php
-	logout.php
-	view-books.php
-config/
-	school-info.php
-	setup.php
-	uploads/
-		photo.jpg
-controller/
-	admin.php
-	assign_staff.php
-	checkin-code.php
-	checkin-process.php
-	class.php
-	exam.php
-	session.php
-	settings.php
-	staff.php
-	student.php
-	subject.php
-includes/
-	database.php
-logs/
-	ad_error.log
-	sd_error.log
-	sf_error.log
-public/
-	admin/
-		add-admin.php
-		admin-dashboard.php
-		assign-staff.php
-		attendance.php
-		class-attendance.php
-		delete.php
-		fee-dashboard.php
-		get_students.php
-		notification.php
-		results-upload.php
-		settings.php
-		staff.php
-		students.php
-		test.php
-		view-attendance.php
-		view.php
-		fees/
-			fee-collection.php
-			fee-reminder.php
-			fee-structure.php
-			transaction-history.php
-		include/
-			header.php
-			modals.php
-			side-bar.php
-	staff/
-		attendance.php
-		check-in.php
-		delete.php
-		mark-attendance.php
-		notification.php
-		results.php
-		settings.php
-		staff-dashboard.php
-		upload.php
-		view-students.php
-		view.php
-		include/
-			header.php
-			modals.php
-			side-bar.php
-		result-directory/
-		result-upload/
-	students/
-		notification.php
-		report.php
-		setting.php
-		settings.php
-		student-dashboard.php
-		view-result.php
-		include/
-			header.php
-			side-bar.php
-resultroom/
-	2024-2025 Fees Schedule.pdf
-	VIVOR OSCAR MAKAFUI(STD00001121) Report Sheet.pdf
-sql/
-	GLP_installer_900223150_market.exe
-	portal.sql
-src/
-	input.css
-templates/
-	404Error.php
-	DOCUMENTATION.md
-	loader.php
-	uploads/
-		photo.jpg
-		photo.png
+portal/
+├── index.php                 # Login entry point
+├── logout.php               # Logout handler
+├── manifest.json            # PWA manifest
+├── package.json             # Dependencies
+├── tailwind.config.js       # Tailwind configuration
+├── postcss.config.js        # PostCSS configuration
+│
+├── app/                     # App logic & PWA
+│   ├── app.js
+│   └── service-worker.js
+│
+├── assets/                  # Static assets
+│   ├── css/                 # Stylesheets
+│   ├── js/                  # JavaScript libraries
+│   ├── fonts/               # Font files
+│   └── favicon/             # App icons
+│
+├── config/                  # Configuration files
+│   ├── school-info.php
+│   └── setup.php
+│
+├── controller/              # Business logic controllers
+│   ├── admin.php
+│   ├── staff.php
+│   ├── student.php
+│   ├── attendance.php
+│   ├── exam.php
+│   └── ...
+│
+├── includes/                # Shared includes
+│   ├── database.php         # DB connection
+│   └── logger.php           # Error logging
+│
+├── public/                  # Public-facing pages
+│   ├── admin/               # Admin dashboard & pages
+│   ├── staff/               # Staff pages (including results.php)
+│   └── students/            # Student dashboard & pages
+│
+├── resultroom/              # Generated PDFs & reports
+│
+├── sql/                     # Database files
+│   └── portal.sql
+│
+├── templates/               # General templates
+│   ├── 404Error.php
+│   └── DOCUMENTATION.md
+│
+└── README.md               # This file
 ```
 
-## Overview
-This portal is a web-based management system designed for schools, featuring modules for administrators, staff, and students. It provides functionalities such as login authentication, bookshop management, attendance tracking, fee management, notifications, and result viewing.
+---
 
-## Project Structure
+## 🔑 Key Components
 
-- **index.php**: Main entry point and login handler for all user roles.
-- **logout.php**: Handles user logout.
-- **manifest.json**: Web app manifest for PWA support.
-- **package.json**: Project dependencies and scripts.
-- **postcss.config.js / tailwind.config.js**: CSS build configuration.
+### Student Dashboard Pages
+All pages feature modern UI with Tailwind CSS, dark mode support, and responsive design:
 
-### Key Folders
-- **app/**: Contains main JavaScript logic and service worker for PWA features.
-- **assets/**: Static assets including CSS, JS, fonts, and favicons.
-- **bookshop/**: Bookshop management (add, view books, login/logout).
-- **config/**: Configuration files and school info.
-- **controller/**: PHP controllers for admin, staff, student, attendance, exams, sessions, settings, etc.
-- **includes/**: Shared PHP includes (e.g., database connection).
-- **logs/**: Error logs for different modules.
-- **public/**: Public-facing pages for admin, staff, and students, including dashboards, attendance, fees, notifications, and results.
-- **resultroom/**: Stores PDF reports and fee schedules.
-- **sql/**: Database installer and SQL dump.
-- **src/**: Source CSS files for custom styling.
-- **templates/**: Error pages, documentation, loader, and uploads.
+- **student-dashboard.php** - Overview with quick actions and statistics
+- **view-result.php** - Results list with PDF preview modal and download options
+- **notification.php** - Numbered notification cards with formatting
+- **settings.php / setting.php** - Profile and password management
 
-## Authentication Flow
-- Users (admin, staff, student) log in via `index.php`.
-- Credentials are checked against the database.
-- On success, users are redirected to their respective dashboards.
-- Sessions are used to manage authentication state.
+### Staff Pages
+- **results.php** - Terminal report sheet generator with:
+  - Multi-student workflow
+  - Automatic grade & aggregate calculation
+  - PDF generation with professional template
+  - LocalStorage data persistence
+  - Student auto-selection from class roster
+  
+- **upload.php** - Result file upload with drag-drop and progress tracking
 
-## Main Features
-- **Admin Dashboard**: Manage staff, students, fees, attendance, notifications, and results.
-- **Staff Dashboard**: Mark attendance, upload results, view students, and manage notifications.
-- **Student Dashboard**: View results, notifications, and reports.
-- **Bookshop**: Add/view books, login/logout for bookshop users.
-- **Attendance**: Track and view attendance for classes and staff.
-- **Fee Management**: Fee collection, reminders, structure, and transaction history.
-- **Notifications**: Send and view notifications for all user roles.
-- **Results**: Upload and view student results.
+### Authentication
+- Role-based login (Admin/Staff/Student)
+- Session management
+- Secure logout
 
-## Assets
-- **CSS**: Bootstrap, Font Awesome, custom styles.
-- **JS**: jQuery, Bootstrap, Chart.js, custom scripts for modals and check-in.
-- **Favicons**: Multiple sizes for cross-device compatibility.
+---
 
-## Error Logging
-- Error logs are stored in the `logs/` directory for admin, staff, and student modules.
+## 🎨 Recent Enhancements
 
-## Database
-- SQL dump available in `sql/portal.sql`.
-- Database connection handled in `includes/database.php`.
+### 1. **Modern UI Redesign** ✨
+- Applied Tailwind CSS gradient system across all student pages
+- Implemented dark mode support with proper contrast
+- Created responsive card-based layouts
+- Added Font Awesome icons throughout
 
-## Progressive Web App (PWA)
-- Manifest and service worker included for offline support and installability.
+### 2. **PDF Result Preview** 🔍
+- Added in-page PDF viewer using PDF.js
+- Students can preview results before downloading
+- Includes:
+  - Page navigation (Previous/Next)
+  - Zoom In/Out controls
+  - Direct download from preview modal
+  - Keyboard shortcuts (arrow keys, ESC)
 
-## Customization
-- Tailwind and custom CSS for modern UI.
-- Easily extendable controllers and templates for new features.
+### 3. **Report Sheet Generator** 📊
+- Professional terminal report sheet creation
+- Features:
+  - Multi-student batch processing
+  - Automatic student selection from class
+  - Auto-calculation of grades and remarks
+  - Academic aggregate calculation (core + best 2 electives)
+  - Professional PDF template with:
+    - School header with logo
+    - Student information grid
+    - Subject scores table
+    - Behavioral assessment
+    - Teacher remarks section
+    - Dual signature blocks with dates
+    - Confidentiality footer
 
-## Getting Started
-1. Import the SQL dump into your MySQL server.
-2. Configure database credentials in `includes/database.php`.
-3. Serve the project using XAMPP or a compatible PHP server.
-4. Access the portal via `index.php`.
+### 4. **Smart Student Selection** 🎓
+- Dropdown populated with students from staff's assigned class
+- Automatic Student ID population
+- Prevents manual entry errors
+- Seamless multi-student workflow
 
-## Contact & Support
-For further documentation, see `templates/DOCUMENTATION.md` or contact the project maintainer.
+### 5. **Enhanced File Upload** 📤
+- Drag-and-drop file input
+- File preview with type detection
+- Progress indicators
+- Professional error handling
+- Process step visualization
+
+---
+
+## 🚀 Installation & Setup
+
+### Prerequisites
+- PHP 7.4+
+- MySQL 5.7+
+- Apache/Nginx web server
+- XAMPP or equivalent (for local development)
+
+### Steps
+
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/vivor-oscar/schoolmanagement.git
+   cd portal
+   ```
+
+2. **Database Setup**
+   ```bash
+   # Import the SQL dump
+   mysql -u root -p < sql/portal.sql
+   ```
+
+3. **Configure Database Connection**
+   - Edit `includes/database.php`
+   - Update database credentials:
+     ```php
+     $servername = "localhost";
+     $username = "root";
+     $password = "";
+     $dbname = "portal";
+     ```
+
+4. **Place in Web Root**
+   ```bash
+   # For XAMPP
+   cp -r portal C:\xampp\htdocs\
+   ```
+
+5. **Access the Portal**
+   - Navigate to: `http://localhost/portal/`
+   - Use default credentials (set during setup)
+
+---
+
+## 💻 Usage
+
+### Admin Login
+1. Visit the portal homepage
+2. Select "Admin" role
+3. Enter credentials
+4. Access admin dashboard with all management features
+
+### Staff Login
+1. Select "Staff" role
+2. Enter credentials
+3. Access staff dashboard
+4. Generate report sheets, upload results, track attendance
+
+### Student Login
+1. Select "Student" role
+2. Enter credentials
+3. View results with preview functionality
+4. Check notifications and manage settings
+
+---
+
+## 🗄 Database
+
+### Schema Highlights
+- **users** - Authentication credentials
+- **students** - Student information
+- **staff** - Staff information
+- **staff_classes** - Staff to class assignments
+- **attendance** - Attendance records
+- **results** - Student results
+- **fees** - Fee management
+- **notifications** - System notifications
+
+**SQL Dump**: `sql/portal.sql`
+
+---
+
+## 🔐 Authentication
+
+### Flow
+1. User submits credentials via login form
+2. System verifies against database
+3. Role-based session established
+4. User redirected to role-specific dashboard
+5. Session used for authorization checks
+
+### Security Features
+- Password hashing (recommended: bcrypt)
+- Session validation
+- CSRF token support
+- SQL injection prevention (parameterized queries)
+
+---
+
+## 🎨 UI/UX Highlights
+
+### Design System
+- **Color Scheme**: Gradient-based (Blue, Purple, Emerald, Orange)
+- **Typography**: Roboto font family
+- **Spacing**: Tailwind CSS spacing scale
+- **Icons**: Font Awesome 6.0+
+
+### Responsive Breakpoints
+- **Mobile**: 320px - 640px
+- **Tablet**: 641px - 1024px
+- **Desktop**: 1025px+
+
+### Dark Mode
+- Automatic detection of system preference
+- Manual toggle support
+- Proper contrast ratios (WCAG AA)
+- Consistent styling across all pages
+
+### Accessibility
+- Semantic HTML structure
+- ARIA labels where appropriate
+- Keyboard navigation support
+- Color-independent information
+
+---
+
+
+### Commit Message Format
+```
+[Type]: [Description]
+
+Examples:
+- "Fix: PDF now displays student name instead of ID"
+- "Feature: Add in-page PDF preview for results"
+- "Update: Improve responsive design on mobile"
+- "Docs: Update README with new features"
+```
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these guidelines:
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/your-feature`
+3. Make your changes
+4. Commit with clear messages: `git commit -m "Feature: description"`
+5. Push to the branch: `git push origin feature/your-feature`
+6. Submit a pull request
+
+---
+
+## 📧 Contact & Support
+
+**Project Owner**: Vivor Oscar
+**GitHub**: [@vivor-oscar](https://github.com/vivor-oscar)
+**Repository**: [schoolmanagement](https://github.com/vivor-oscar/schoolmanagement)
+
+For issues, feature requests, or documentation questions, please visit the GitHub repository.
+
+---
+
+## 📜 License
+
+This project is part of the school management initiative. All rights reserved.
+
+---
+
+## 🎓 Acknowledgments
+
+- **Tailwind CSS** - For the amazing utility-first CSS framework
+- **Font Awesome** - For the comprehensive icon library
+- **PDF.js** - For reliable PDF rendering
+- **Royal Websters Academy** - For the partnership
+
+---
+
+**Last Updated**: November 17, 2025
+**Version**: 2.0 (Modern UI & Enhanced Features)

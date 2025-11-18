@@ -1,5 +1,5 @@
 <?php
-// notifications.php
+// notifications.php (improved)
 include 'include/side-bar.php';
 // Display errors for debugging (remove in production)
 // ini_set('display_errors', 1);
@@ -9,50 +9,98 @@ include 'include/side-bar.php';
 include('../../includes/database.php');
 include('../../includes/logger.php');
 
-// Dummy database connection for demonstration
+session_start();
 
+// Fetch lists of students and staff for the UI
+$students = [];
+$staffs = [];
+try {
+    $sr = $conn->query("SELECT student_id, CONCAT(first_name, ' ', COALESCE(last_name,'')) AS name FROM students ORDER BY first_name, last_name");
+    if ($sr) $students = $sr->fetch_all(MYSQLI_ASSOC);
+} catch (Exception $e) {
+}
+try {
+    $rr = $conn->query("SELECT staff_id, CONCAT(first_name, ' ', COALESCE(last_name,'')) AS name FROM staff ORDER BY first_name, last_name");
+    if ($rr) $staffs = $rr->fetch_all(MYSQLI_ASSOC);
+} catch (Exception $e) {
+}
 
 // --- Handle Notification Submission ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['form_type']) && $_POST['form_type'] === 'send_notification') {
-    $message = trim($_POST['message']);
-    $targetRole = $_POST['target_role'];
-    $senderName = 'Administrator'; // You can fetch this from a session if an admin is logged in
+    $message = trim($_POST['message'] ?? '');
+    $targetRole = $_POST['target_role'] ?? 'all';
+    $senderName = $_SESSION['username'] ?? ($_SESSION['admin_name'] ?? 'Administrator');
+    $senderId = $_SESSION['admin_id'] ?? null;
 
-    if (!empty($message) && in_array($targetRole, ['all', 'student', 'staff'])) {
-        // Use a prepared statement to prevent SQL injection
-        $stmt = $conn->prepare("INSERT INTO notifications (message, target_role, sender_name) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $message, $targetRole, $senderName);
-
-        if ($stmt->execute()) {
-            $status_message = "Notification sent successfully!";
-            $status_type = "success";
-            // log
-            session_start();
-            $user_id = $_SESSION['admin_id'] ?? '';
-            $username = $_SESSION['username'] ?? 'Administrator';
-            log_activity($conn, $user_id, $username, $_SESSION['role'] ?? 'administrator', 'send_notification', "target={$targetRole};message=" . substr($message,0,200));
-        } else {
-            $status_message = "Error sending notification: " . $stmt->error;
-            $status_type = "error";
-        }
-    } else {
-        $status_message = "Please provide a message and select a valid target audience.";
+    if (empty($message)) {
+        $status_message = "Please provide a message.";
         $status_type = "error";
+    } elseif (!in_array($targetRole, ['all', 'student', 'staff', 'individual'])) {
+        $status_message = "Invalid target audience.";
+        $status_type = "error";
+    } else {
+        // Insert notification record
+        $ins = $conn->prepare("INSERT INTO notifications (message, target_type, target_role, sender_name, sender_id) VALUES (?, ?, ?, ?, ?)");
+        $ins->bind_param("sssss", $message, $targetRole, $targetRole, $senderName, $senderId);
+        if (!$ins->execute()) {
+            $status_message = "Error saving notification: " . $ins->error;
+            $status_type = "error";
+        } else {
+            $notification_id = $conn->insert_id;
+            // Build recipient list
+            $recipients = [];
+            if ($targetRole === 'all') {
+                // get all students
+                $r1 = $conn->query("SELECT student_id FROM students");
+                if ($r1) while ($row = $r1->fetch_assoc()) $recipients[] = ['user_type' => 'student', 'user_id' => $row['student_id']];
+                // get all staff
+                $r2 = $conn->query("SELECT staff_id FROM staff");
+                if ($r2) while ($row = $r2->fetch_assoc()) $recipients[] = ['user_type' => 'staff', 'user_id' => $row['staff_id']];
+            } elseif ($targetRole === 'student') {
+                $r = $conn->query("SELECT student_id FROM students");
+                if ($r) while ($row = $r->fetch_assoc()) $recipients[] = ['user_type' => 'student', 'user_id' => $row['student_id']];
+            } elseif ($targetRole === 'staff') {
+                $r = $conn->query("SELECT staff_id FROM staff");
+                if ($r) while ($row = $r->fetch_assoc()) $recipients[] = ['user_type' => 'staff', 'user_id' => $row['staff_id']];
+            } else { // individual
+                // Expecting values like student:123 or staff:45
+                $posted = $_POST['recipients'] ?? [];
+                if (!is_array($posted)) $posted = [$posted];
+                foreach ($posted as $val) {
+                    $parts = explode(':', $val, 2);
+                    if (count($parts) === 2 && in_array($parts[0], ['student','staff']) && strlen($parts[1])>0) {
+                        $recipients[] = ['user_type' => $parts[0], 'user_id' => $parts[1]];
+                    }
+                }
+            }
+
+            // Insert recipients
+            if (!empty($recipients)) {
+                $conn->begin_transaction();
+                $prep = $conn->prepare("INSERT INTO notification_recipients (notification_id, user_type, user_id) VALUES (?, ?, ?)");
+                foreach ($recipients as $r) {
+                    $prep->bind_param('iss', $notification_id, $r['user_type'], $r['user_id']);
+                    $prep->execute();
+                }
+                $conn->commit();
+            }
+
+            $status_message = "Notification queued/sent successfully!";
+            $status_type = "success";
+            log_activity($conn, $senderId ?? '', $senderName, $_SESSION['role'] ?? 'administrator', 'send_notification', "id={$notification_id};target={$targetRole};recipients=" . count($recipients));
+        }
     }
 }
 
 // --- Handle Notification Deletion ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_notification_id'])) {
     $delete_id = intval($_POST['delete_notification_id']);
-    $delete_query = "DELETE FROM notifications WHERE notification_id = $delete_id";
-    if ($conn->query($delete_query)) {
+    $del = $conn->prepare("DELETE FROM notifications WHERE notification_id = ? LIMIT 1");
+    $del->bind_param('i', $delete_id);
+    if ($del->execute()) {
         $status_message = "Notification deleted successfully!";
         $status_type = "success";
-        // log deletion
-        session_start();
-        $user_id = $_SESSION['admin_id'] ?? '';
-        $username = $_SESSION['username'] ?? 'Administrator';
-        log_activity($conn, $user_id, $username, $_SESSION['role'] ?? 'administrator', 'delete_notification', "id={$delete_id}");
+        log_activity($conn, $_SESSION['admin_id'] ?? '', $_SESSION['username'] ?? 'Administrator', $_SESSION['role'] ?? 'administrator', 'delete_notification', "id={$delete_id}");
     } else {
         $status_message = "Error deleting notification: " . $conn->error;
         $status_type = "error";
@@ -60,13 +108,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_notification_i
 }
 
 // --- Fetch Notifications for Display ---
-// For simplicity, this page will display all notifications.
-// In a real system, students/staff would see notifications relevant to them on their dashboards.
 $all_notifications_query = "SELECT * FROM notifications ORDER BY created_at DESC";
 $all_notifications_result = $conn->query($all_notifications_query);
 $all_notifications = $all_notifications_result ? $all_notifications_result->fetch_all(MYSQLI_ASSOC) : [];
 
-//$conn->close();
 ?>
 <style>
     body {
@@ -122,12 +167,33 @@ $all_notifications = $all_notifications_result ? $all_notifications_result->fetc
                                 </div>
                                 <div>
                                     <label for="target_role" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Send To</label>
-                                    <select id="target_role" name="target_role" required
+                                    <select id="target_role" name="target_role" required onchange="toggleRecipients()"
                                         class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2">
                                         <option value="all">All (Students & Staff)</option>
                                         <option value="student">Students Only</option>
                                         <option value="staff">Staff Only</option>
+                                        <option value="individual">Individual Recipients</option>
                                     </select>
+                                    <div id="recipients-container" class="mt-3 hidden">
+                                        <label for="recipients" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Select Recipients (hold Ctrl / Cmd to select multiple)</label>
+                                        <select id="recipients" name="recipients[]" multiple size="8"
+                                            class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-sm p-2">
+                                            <?php if (!empty($students)): ?>
+                                            <optgroup label="Students">
+                                                <?php foreach ($students as $s): ?>
+                                                    <option value="student:<?php echo htmlspecialchars($s['student_id']); ?>"><?php echo htmlspecialchars($s['name'] . ' (' . $s['student_id'] . ')'); ?></option>
+                                                <?php endforeach; ?>
+                                            </optgroup>
+                                            <?php endif; ?>
+                                            <?php if (!empty($staffs)): ?>
+                                            <optgroup label="Staff">
+                                                <?php foreach ($staffs as $sf): ?>
+                                                    <option value="staff:<?php echo htmlspecialchars($sf['staff_id']); ?>"><?php echo htmlspecialchars($sf['name'] . ' (' . $sf['staff_id'] . ')'); ?></option>
+                                                <?php endforeach; ?>
+                                            </optgroup>
+                                            <?php endif; ?>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="flex justify-end">
                                     <button type="submit" class="bg-blue-600 text-white font-medium py-2 px-6 rounded-lg 
@@ -150,8 +216,8 @@ $all_notifications = $all_notifications_result ? $all_notifications_result->fetc
                                         <div>
                                             <div class="flex justify-between items-center mb-2">
                                                 <span class="text-sm font-medium text-gray-600 dark:text-gray-300">
-                                                    To: <span class="capitalize font-semibold"><?php echo htmlspecialchars($notification['target_role']); ?></span>
-                                                </span>
+                                                        To: <span class="capitalize font-semibold"><?php echo htmlspecialchars($notification['target_type'] ?? $notification['target_role'] ?? 'all'); ?></span>
+                                                    </span>
                                                 <span class="text-xs text-gray-500 dark:text-gray-400">
                                                     Sent by: <?php echo htmlspecialchars($notification['sender_name']); ?> on <?php echo date('M d, Y H:i', strtotime($notification['created_at'])); ?>
                                                 </span>
@@ -181,6 +247,21 @@ $all_notifications = $all_notifications_result ? $all_notifications_result->fetc
                         document.getElementById('modal-form').classList.add('hidden');
                     }
                 });
+                function toggleRecipients() {
+                    var sel = document.getElementById('target_role');
+                    var container = document.getElementById('recipients-container');
+                    if (!sel || !container) return;
+                    if (sel.value === 'individual') {
+                        container.classList.remove('hidden');
+                    } else {
+                        container.classList.add('hidden');
+                        // clear selection
+                        var r = document.getElementById('recipients');
+                        if (r) {
+                            for (var i=0;i<r.options.length;i++) r.options[i].selected = false;
+                        }
+                    }
+                }
             </script>
 </body>
 
